@@ -3,10 +3,31 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\ItemAvailabilityController;
+use App\Dto\ItemAvailabilityDto;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource]
+
+#[ApiResource(
+    collectionOperations: [
+        'get_items_on_station' => [
+            'method' => 'GET',
+            'path' => '/items-availability',
+            'controller' => ItemAvailabilityController::class,
+            // "output" => ItemAvailabilityDto::class,
+            'openapi_context' => [
+                'summary'     => 'Get items on station',
+                'description' => "# Pop a great rabbit ",
+                "parameters" => [
+                    ['name'=> 'station', 'in' => 'query', 'schema' => ['type' => 'integer']],
+                    ['name'=> 'date_from', 'in' => 'query', 'schema' => ['type' => 'date']],
+                    ['name'=> 'date_to', 'in' => 'query', 'schema' => ['type' => 'date']],
+                ]
+            ],
+        ],
+    ]
+)]
 #[ORM\Entity]
 #[ORM\Table(name: 'order_item')]
 class OrderItem
