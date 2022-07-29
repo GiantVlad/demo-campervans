@@ -29,6 +29,7 @@ final class Version20220727050059 extends AbstractMigration
         $this->addSql('ALTER TABLE items ADD CONSTRAINT FK_E11EE94DC54C8C93 FOREIGN KEY (type_id) REFERENCES item_types (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_E11EE94DC54C8C93 ON items (type_id)');
         $this->addSql('CREATE unique index unique_item_date ON item_station (last_date, item_id)');
+        // alter table order_item add item_type_id int not null;
     }
 
     public function down(Schema $schema): void

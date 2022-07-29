@@ -21,9 +21,9 @@ final class Version20220726182228 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
-        $this->addSql('DROP SEQUENCE greeting_id_seq CASCADE');
         $this->addSql('CREATE SEQUENCE item_station_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE order_item_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE items_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE orders_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE stations_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE item_station (id INT NOT NULL, item_id INT DEFAULT NULL, station_id INT DEFAULT NULL, last_date DATE NOT NULL DEFAULT CURRENT_DATE, PRIMARY KEY(id))');
@@ -58,6 +58,7 @@ final class Version20220726182228 extends AbstractMigration
         $this->addSql('ALTER TABLE order_item DROP CONSTRAINT FK_52EA1F096E00DA83');
         $this->addSql('ALTER TABLE order_item DROP CONSTRAINT FK_52EA1F09A214C4A5');
         $this->addSql('DROP SEQUENCE item_station_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE items_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE order_item_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE orders_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE stations_id_seq CASCADE');

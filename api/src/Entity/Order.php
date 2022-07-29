@@ -22,11 +22,6 @@ class Order
     #[ORM\OneToMany(mappedBy: 'order', targetEntity: 'OrderItem')]
     public iterable $orderItems;
 
-    public function __construct()
-    {
-        $this->orderItems = new ArrayCollection([]);
-    }
-
     public function getId(): ?int
     {
         return $this->id;

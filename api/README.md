@@ -1,5 +1,6 @@
-# API
+docker-compose exec php bin/phpunit
 
-The API will be here.
+docker-compose exec php bin/console doctrine:database:create --env=test
 
-Refer to the [Getting Started Guide](https://api-platform.com/docs/distribution) for more information.
+console doctrine:migrations:migrate -n --env=test
+<!--        <server name="DATABASE_URL" value="postgresql://api-platform:!ChangeMe!@database_test:5434/api_test?serverVersion=13" />-->

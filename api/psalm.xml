@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="3"
+    resolveFromConfigFile="true"
+    memoizeMethodCallResults="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="src" />
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <MoreSpecificImplementedParamType errorLevel="suppress"/>
+
+        <MissingFile>
+            <errorLevel type="suppress">
+                <file name="config/bootstrap.php"/>
+            </errorLevel>
+        </MissingFile>
+
+        <MissingReturnType>
+            <errorLevel type="suppress">
+                <file name="src/App/Model/ValueObject/ValueObjectInterface.php"/>
+                <file name="src/App/Model/ValueObject/ValueObjectAsIntegerInterface.php"/>
+            </errorLevel>
+        </MissingReturnType>
+
+        <FalsableReturnStatement>
+            <errorLevel type="suppress">
+                <file name="src/App/FileSystem/AbstractFileManager.php"/>
+            </errorLevel>
+        </FalsableReturnStatement>
+
+        <InvalidFalsableReturnType>
+            <errorLevel type="suppress">
+                <file name="src/App/FileSystem/AbstractFileManager.php"/>
+            </errorLevel>
+        </InvalidFalsableReturnType>
+
+        <UnusedFunctionCall>
+            <errorLevel type="suppress">
+                <referencedFunction name="array_map"/>
+            </errorLevel>
+        </UnusedFunctionCall>
+
+        <InvalidReturnStatement>
+            <errorLevel type="suppress">
+                <file name="var/synchtank-common/src/Utils/InputConvertor.php"/>
+            </errorLevel>
+        </InvalidReturnStatement>
+
+        <InvalidReturnType>
+            <errorLevel type="suppress">
+                <file name="var/synchtank-common/src/Utils/InputConvertor.php"/>
+            </errorLevel>
+        </InvalidReturnType>
+
+        <InvalidArgument>
+            <errorLevel type="suppress">
+                <referencedFunction name="Doctrine\Common\Collections\ArrayCollection::add"/>
+            </errorLevel>
+        </InvalidArgument>
+
+        <MismatchingDocblockReturnType>
+            <errorLevel type="suppress">
+                <file name="src/App/Serializer/JsonDeserializationVisitor.php"/>
+            </errorLevel>
+        </MismatchingDocblockReturnType>
+
+        <PossiblyUndefinedMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="Symfony\Component\Config\Definition\Builder\NodeParentInterface::end"/>
+                <referencedMethod name="Symfony\Component\Config\Definition\Builder\NodeDefinition::children"/>
+                <referencedMethod name="Symfony\Component\Config\Definition\Builder\NodeDefinition::canbeenabled"/>
+            </errorLevel>
+        </PossiblyUndefinedMethod>
+
+        <PossiblyUndefinedVariable>
+            <errorLevel type="suppress">
+                <file name="src/App/Provider/Aims/AimsClient.php"/>
+            </errorLevel>
+        </PossiblyUndefinedVariable>
+
+        <UndefinedMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="ReflectionType::getName"/>
+            </errorLevel>
+        </UndefinedMethod>
+
+        <TooManyArguments>
+            <errorLevel type="suppress">
+                <referencedFunction name="Doctrine\Common\Collections\ExpressionBuilder::andX"/>
+                <referencedFunction name="Doctrine\Common\Collections\ExpressionBuilder::orX"/>
+            </errorLevel>
+        </TooManyArguments>
+
+        <UndefinedDocblockClass>
+            <errorLevel type="suppress">
+                <file name="src/App/Event/Subscriber/Doctrine/CreatedBySubscriber.php"/>
+                <file name="src/App/Event/Subscriber/Doctrine/LastModifiedBySubscriber.php"/>
+                <file name="src/App/ApiFilter/ApiQuery.php"/>
+                <file name="src/App/Event/Subscriber/Doctrine/ClientTrackingSubscriber.php"/>
+                <file name="src/App/Domain/Client/CurrentClientResolver.php"/>
+            </errorLevel>
+        </UndefinedDocblockClass>
+
+        <UndefinedInterfaceMethod>
+            <errorLevel type="suppress">
+                <file name="src/App/Repository/ClientRepository.php"/>
+                <file name="src/App/Repository/ContactMessageRepository.php"/>
+            </errorLevel>
+        </UndefinedInterfaceMethod>
+
+        <!-- level 3 issues - slightly lazy code writing, but provably low false-negatives -->
+
+        <DeprecatedMethod errorLevel="info" />
+        <DeprecatedProperty errorLevel="info" />
+        <DeprecatedClass errorLevel="info" />
+        <DeprecatedConstant errorLevel="info" />
+        <DeprecatedFunction errorLevel="info" />
+        <DeprecatedInterface errorLevel="info" />
+        <DeprecatedTrait errorLevel="info" />
+
+        <InternalMethod errorLevel="info" />
+        <InternalProperty errorLevel="info" />
+        <InternalClass errorLevel="info" />
+
+        <InvalidDocblock errorLevel="info" />
+
+        <PropertyNotSetInConstructor errorLevel="suppress" />
+        <MissingConstructor errorLevel="info" />
+
+        <DocblockTypeContradiction errorLevel="info" />
+        <RedundantConditionGivenDocblockType errorLevel="info" />
+
+        <UnresolvableInclude errorLevel="info" />
+
+        <InvalidStringClass errorLevel="info" />
+    </issueHandlers>
+</psalm>

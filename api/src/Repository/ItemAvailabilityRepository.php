@@ -22,32 +22,31 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
     /**
      * @throws Exception
      */
-    public function getItemsOnStations(\DatePeriod $period, ?int $stationId, int $page = 1): iterable
+    public function getItemsOnStations(\DatePeriod $period, int $stationId, int $page = 1): iterable
     {
         $rows = new ArrayCollection();
 
-        $andWhere = $stationId ? ' AND oi.in_station_id = ? ' : '';
         $conn = $this->getEntityManager()
             ->getConnection();
         $sql = "
-            SELECT count(item_id), in_station_id, it.type, ? AS date FROM order_item oi
-               JOIN items i ON oi.item_id = i.id
-               JOIN item_types it ON i.type_id = it.id
-            WHERE (date_to, item_id) IN
-                  (SELECT MAX(date_to) date, item_id FROM order_item
-                   WHERE date_to < ? GROUP BY item_id)
-                {$andWhere}
-            GROUP BY it.type, in_station_id;
+            SELECT SUM(am) AS amount, item_type_id, ? AS date FROM (
+                SELECT count(oi.id) as am, item_type_id FROM order_item oi
+                WHERE in_station_id = ? AND date_to < ? AND date_from != ? GROUP BY item_type_id
+                UNION
+                SELECT -count(oi.id) as am, item_type_id FROM order_item oi
+                WHERE out_station_id = ? AND date_from <= ? GROUP BY item_type_id) as foo
+            GROUP BY item_type_id
         ";
         $stmt = $conn->prepare($sql);
 
         foreach ($period as $date) {
             $date = $date->format('Y-m-d');
             $stmt->bindValue(1, $date);
-            $stmt->bindValue(2, $date);
-            if ($stationId) {
-                $stmt->bindValue(3, $stationId);
-            }
+            $stmt->bindValue(2, $stationId);
+            $stmt->bindValue(3, $date);
+            $stmt->bindValue(4, $date);
+            $stmt->bindValue(5, $stationId);
+            $stmt->bindValue(6, $date);
             $result = $stmt->executeQuery()->fetchAssociative();
             if (!empty($result)) {
                 $rows->add($result);

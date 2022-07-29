@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     'get',
     'get_items_on_station' => [
         'method' => 'GET',
-        'path' => '/items-availability/{station}',
+        'path' => '/items-availability',
         'controller' => ItemAvailabilityController::class,
         'openapi_context' => [
             'summary'     => 'Get items on station',

@@ -1,0 +1,3 @@
+App\Entity\Order:
+    order_{1..1000}:
+        createdAt: <datetimeBetween('-100 days', 'now')>
