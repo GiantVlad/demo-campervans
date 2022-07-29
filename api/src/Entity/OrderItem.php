@@ -20,7 +20,11 @@ class OrderItem
     private Order $order;
 
     #[ORM\ManyToOne(targetEntity: 'Item', inversedBy: 'orderItems')]
-    private Item $item;
+    private ?Item $item;
+
+    #[ORM\ManyToOne(targetEntity: 'ItemType')]
+    #[Assert\NotBlank]
+    public ItemType $itemType;
 
     #[ORM\Column(type: 'datetime')]
     #[Assert\NotBlank]
@@ -103,14 +107,26 @@ class OrderItem
         return $this;
     }
 
-    public function getItem(): Item
+    public function getItem(): ?Item
     {
         return $this->item;
     }
 
-    public function setItem(Item $item): self
+    public function setItem(?Item $item): self
     {
         $this->item = $item;
+
+        return $this;
+    }
+
+    public function getItemType(): ItemType
+    {
+        return $this->itemType;
+    }
+
+    public function setItemType(ItemType $itemType): self
+    {
+        $this->itemType = $itemType;
 
         return $this;
     }

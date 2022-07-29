@@ -2,13 +2,10 @@
 
 namespace App\Repository;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
-use App\Entity\ItemStation;
+use App\Dto\ItemAvailabilityDto;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ItemAvailabilityRepository extends ServiceEntityRepository
@@ -16,7 +13,7 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
     const ITEMS_PER_PAGE = 20;
 
     public function __construct(ManagerRegistry $registry) {
-        parent::__construct($registry, ItemStation::class);
+        parent::__construct($registry, ItemAvailabilityDto::class);
     }
 
     /**
@@ -24,7 +21,7 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
      */
     public function getItemsOnStations(\DatePeriod $period, int $stationId, int $page = 1): iterable
     {
-        $rows = new ArrayCollection();
+        $rows = new ArrayCollection([]);
 
         $conn = $this->getEntityManager()
             ->getConnection();
@@ -39,7 +36,7 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
         ";
         $stmt = $conn->prepare($sql);
 
-        foreach ($period as $date) {
+        foreach ($period as $key => $date) {
             $date = $date->format('Y-m-d');
             $stmt->bindValue(1, $date);
             $stmt->bindValue(2, $stationId);
@@ -48,8 +45,9 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
             $stmt->bindValue(5, $stationId);
             $stmt->bindValue(6, $date);
             $result = $stmt->executeQuery()->fetchAssociative();
-            if (!empty($result)) {
-                $rows->add($result);
+
+            if ($result !== false) {
+                $rows->add(new ItemAvailabilityDto($result));
             }
         }
 
@@ -61,7 +59,7 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
 //        $firstResult = ($page -1) * self::ITEMS_PER_PAGE;
 //        $queryBuilder = $this->createQueryBuilder('i');
 //        $itemStation = $queryBuilder->select()
-//            ->from(ItemStation::class, 'is')
+//            ->from(ItemAvailabilityDto::class, 'is')
 //            ->where('is.station = :station')
 //            ->andWhere('is.lastDate < :selected_date')
 //            ->groupBy('is.item')

@@ -60,4 +60,11 @@ class ItemType
     {
         return $this->items;
     }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 }

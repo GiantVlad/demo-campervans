@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Entity;
+namespace App\Dto;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\ItemAvailabilityController;
+use App\Entity\Item;
+use App\Entity\ItemType;
+use App\Entity\Station;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -24,28 +27,22 @@ use Symfony\Component\Validator\Constraints as Assert;
         ],
     ],
 ])]
-#[ORM\Entity]
-#[ORM\Table(name: 'item_station')]
-class ItemStation
+class ItemAvailabilityDto
 {
-    #[ORM\Id]
-    #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue]
-    private ?int $id = null;
+    private ItemType $itemType;
 
-    #[ORM\ManyToOne(targetEntity: 'Item', inversedBy: 'orderItems')]
-    private Item $item;
+    private \DateTimeInterface $date;
 
-    #[ORM\Column(type: 'datetime')]
-    #[Assert\NotBlank]
-    public \DateTimeInterface $lastDate;
+    private Station $station;
 
-    #[ORM\ManyToOne(targetEntity: 'Station')]
-    public Station $station;
+    private int $amount;
 
-    public function getId(): ?int
+    public function __construct(array $data)
     {
-        return $this->id;
+        $this->itemType = (new ItemType())->setId($data['item_type_id']);
+        $this->date = new \DateTimeImmutable($data['date']);
+        $this->amount = (int) $data['amount'];
+        $this->station = (new Station())->setId($data['station_id']);
     }
 
     public function getStation(): Station
@@ -60,26 +57,38 @@ class ItemStation
         return $this;
     }
 
-    public function getItem(): Item
+    public function getItemType(): ?ItemType
     {
-        return $this->item;
+        return $this->itemType;
     }
 
-    public function setItem(Item $item): self
+    public function setItemType(?ItemType $itemType): self
     {
-        $this->item = $item;
+        $this->itemType = $itemType;
 
         return $this;
     }
 
-    public function getLastDate(): \DateTimeInterface
+    public function getDate(): \DateTimeInterface
     {
-        return $this->lastDate ?? new \DateTimeImmutable();
+        return $this->date ?? new \DateTimeImmutable();
     }
 
-    public function setLastDate(\DateTimeInterface $lastDate): self
+    public function setDate(\DateTimeInterface $date): self
     {
-        $this->lastDate = $lastDate;
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(int $amount): self
+    {
+        $this->amount = $amount;
 
         return $this;
     }
