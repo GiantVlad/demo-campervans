@@ -1,3 +1,11 @@
 App\Entity\Station:
-    station_{1..10}:
-        name: <city()>
+    station_1:
+        name: 'Base station'
+    station_2:
+        name: 'Paris'
+    station_3:
+        name: 'Munich'
+    station_4:
+        name: 'Barcelona'
+    station_5:
+        name: 'Berlin'

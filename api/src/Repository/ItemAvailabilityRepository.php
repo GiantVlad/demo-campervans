@@ -1,42 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Dto\ItemAvailabilityDto;
+use App\Entity\ItemType;
+use App\Entity\OrderItem;
+use App\Entity\Station;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ItemAvailabilityRepository extends ServiceEntityRepository
 {
-    const ITEMS_PER_PAGE = 20;
-
     public function __construct(ManagerRegistry $registry) {
-        parent::__construct($registry, ItemAvailabilityDto::class);
+        parent::__construct($registry, OrderItem::class);
     }
 
     /**
      * @throws Exception
      */
-    public function getItemsOnStations(\DatePeriod $period, int $stationId, int $page = 1): iterable
+    public function getItemsOnStations(\DatePeriod $period, int $stationId): iterable
     {
         $rows = new ArrayCollection([]);
 
         $conn = $this->getEntityManager()
             ->getConnection();
         $sql = "
-            SELECT SUM(am) AS amount, item_type_id, ? AS date, station_id FROM (
-                SELECT count(oi.id) as am, item_type_id, in_station_id AS station_id FROM order_item oi
+            SELECT SUM(amount) AS amount, MAX(it.alias) AS type, ? AS date, MAX(s.name) AS station FROM (
+                SELECT count(oi.id) as amount, item_type_id, MAX(in_station_id) AS station_id FROM order_item oi
                 WHERE in_station_id = ? AND date_to < ? AND date_from != ? GROUP BY item_type_id
                 UNION
-                SELECT -count(oi.id) as am, item_type_id, out_station_id AS station_id FROM order_item oi
+                SELECT -count(oi.id) as amount, item_type_id, MAX(out_station_id) AS station_id FROM order_item oi
                 WHERE out_station_id = ? AND date_from <= ? GROUP BY item_type_id) as foo
-            GROUP BY item_type_id
+                JOIN item_types it ON foo.item_type_id = it.id
+                JOIN stations s ON foo.station_id = s.id
+            GROUP BY item_type_id HAVING SUM(amount) != 0
         ";
         $stmt = $conn->prepare($sql);
 
-        foreach ($period as $key => $date) {
+        foreach ($period as $date) {
             $date = $date->format('Y-m-d');
             $stmt->bindValue(1, $date);
             $stmt->bindValue(2, $stationId);
@@ -44,9 +51,39 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
             $stmt->bindValue(4, $date);
             $stmt->bindValue(5, $stationId);
             $stmt->bindValue(6, $date);
-            $result = $stmt->executeQuery()->fetchAssociative();
+            $resultPerDay = $stmt->executeQuery()->fetchAllAssociative();
 
-            if ($result !== false) {
+            foreach ($resultPerDay as $result) {
+                $rows->add(new ItemAvailabilityDto($result));
+            }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @throws Exception|NonUniqueResultException
+     */
+    public function getBookedItemsOnStations(\DatePeriod $period, int $stationId): iterable
+    {
+        $rows = new ArrayCollection([]);
+        $queryBuilder = $this->createQueryBuilder('oi')
+            ->select('count(oi.id) AS amount, MAX(it.alias) AS itemType, MAX(s.name) AS station, MAX(:selected_date) AS date')
+            ->innerJoin(ItemType::class, 'it', Join::WITH,'oi.itemType = it.id')
+            ->innerJoin(Station::class, 's', Join::WITH,'oi.outStation = s.id AND s.id = :station')
+            ->andWhere(':selected_date BETWEEN oi.dateFrom AND oi.dateTo')
+            ->andHaving('count(oi.id) != 0')
+            ->groupBy('oi.itemType')
+            ->setParameter('station', $stationId)
+        ;
+
+        foreach ($period as $date) {
+            $date = $date->format('Y-m-d');
+            $queryBuilder->setParameter('selected_date', $date);
+
+            $resultPerDay = $queryBuilder->getQuery()->getResult();
+
+            foreach ($resultPerDay as $result) {
                 $rows->add($result);
             }
         }
@@ -54,25 +91,3 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
         return $rows;
     }
 }
-
-
-//        $firstResult = ($page -1) * self::ITEMS_PER_PAGE;
-//        $queryBuilder = $this->createQueryBuilder('i');
-//        $itemStation = $queryBuilder->select()
-//            ->from(ItemAvailabilityDto::class, 'is')
-//            ->where('is.station = :station')
-//            ->andWhere('is.lastDate < :selected_date')
-//            ->groupBy('is.item')
-//            ->setParameter('station', $stationId)
-//            ->setParameter('selected_date', $date->format('Y-m-d H:i:s'))
-//            ->getQuery()
-//            ->getSingleScalarResult();
-//
-//        $criteria = Criteria::create()
-//            ->setFirstResult($firstResult)
-//            ->setMaxResults(self::ITEMS_PER_PAGE);
-//        $queryBuilder->addCriteria($criteria);
-//
-//        $doctrinePaginator = new DoctrinePaginator($queryBuilder);
-//
-//        return new Paginator($doctrinePaginator);

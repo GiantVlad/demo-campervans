@@ -1,24 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\ItemAvailabilityController;
-use App\Dto\ItemAvailabilityDto;
+use App\Controller\ItemBookedController;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 #[ApiResource(
     collectionOperations: [
+        'get',
         'get_items_on_station' => [
             'method' => 'GET',
             'path' => '/items-availability',
             'controller' => ItemAvailabilityController::class,
-            // "output" => ItemAvailabilityDto::class,
             'openapi_context' => [
-                'summary'     => 'Get items on station',
-                'description' => "# Pop a great rabbit ",
+                'summary'     => 'Get available items on station',
+                'description' => "# Get available items on station ",
+                "parameters" => [
+                    ['name'=> 'station', 'in' => 'query', 'schema' => ['type' => 'integer']],
+                    ['name'=> 'date_from', 'in' => 'query', 'schema' => ['type' => 'date']],
+                    ['name'=> 'date_to', 'in' => 'query', 'schema' => ['type' => 'date']],
+                ]
+            ],
+        ],
+        'get_booked_items_on_station' => [
+            'method' => 'GET',
+            'path' => '/items-booked',
+            'controller' => ItemBookedController::class,
+            'openapi_context' => [
+                'summary'     => 'Get booked items on station',
+                'description' => "# Get booked items on station ",
                 "parameters" => [
                     ['name'=> 'station', 'in' => 'query', 'schema' => ['type' => 'integer']],
                     ['name'=> 'date_from', 'in' => 'query', 'schema' => ['type' => 'date']],
@@ -43,16 +58,18 @@ class OrderItem
     #[ORM\ManyToOne(targetEntity: 'Item', inversedBy: 'orderItems')]
     private ?Item $item;
 
-    #[ORM\ManyToOne(targetEntity: 'ItemType')]
+    #[ORM\ManyToOne(targetEntity: 'ItemType', inversedBy: 'orderItems')]
     #[Assert\NotBlank]
     public ItemType $itemType;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'date')]
     #[Assert\NotBlank]
+    #[Assert\Date]
     public \DateTimeInterface $dateFrom;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'date')]
     #[Assert\NotBlank]
+    #[Assert\Date]
     public \DateTimeInterface $dateTo;
 
     #[ORM\ManyToOne(targetEntity: 'Station')]
@@ -68,12 +85,12 @@ class OrderItem
         return $this->id;
     }
 
-    public function getOrder(): ?Order
+    public function getOrder(): Order
     {
         return $this->order;
     }
 
-    public function setOrder(?Order $order): self
+    public function setOrder(Order $order): self
     {
         $this->order = $order;
 

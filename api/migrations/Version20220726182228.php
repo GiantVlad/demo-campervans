@@ -25,8 +25,7 @@ final class Version20220726182228 extends AbstractMigration
         $this->addSql('CREATE TABLE items (
             id INT NOT NULL,
             type_id INT NOT NULL,
-            uuid UUID NOT NULL DEFAULT uuid_generate_v4(),
-            alias VARCHAR(255) NOT NULL,
+            uuid UUID NOT NULL DEFAULT uuid_generate_v4()
             PRIMARY KEY(id)
         )');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_E11EE94DD17F50A6 ON items (uuid)');
@@ -55,7 +54,7 @@ final class Version20220726182228 extends AbstractMigration
         $this->addSql('CREATE TABLE order_item (
             id INT NOT NULL,
             order_id INT NOT NULL,
-            item_id INT NOT NULL,
+            item_id INT,
             item_type_id INT NOT NULL,
             out_station_id INT NOT NULL,
             in_station_id INT NOT NULL,

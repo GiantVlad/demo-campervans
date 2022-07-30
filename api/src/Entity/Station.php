@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,7 +20,9 @@ class Station
 
     #[ORM\Column]
     #[Assert\NotBlank]
-    public string $name = '';
+    #[Assert\Type('string')]
+    #[Assert\Length(min: 2, max: 255)]
+    public string $name;
 
     public function getId(): ?int
     {

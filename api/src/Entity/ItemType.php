@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -18,14 +20,22 @@ class ItemType
 
     #[ORM\Column(type: 'string', unique: true)]
     #[Assert\NotBlank]
-    public string $type = '';
+    #[Assert\Unique]
+    #[Assert\Type('string')]
+    #[Assert\Length(min: 2, max: 100)]
+    public string $type;
 
     #[ORM\Column]
     #[Assert\NotBlank]
-    public string $alias = '';
+    #[Assert\Type('string')]
+    #[Assert\Length(min: 3, max: 255)]
+    public string $alias;
 
     #[ORM\OneToMany(mappedBy: 'item', targetEntity: 'Item')]
     public iterable $items;
+
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: 'OrderItem')]
+    public iterable $orderItems;
 
     public function getId(): ?int
     {
@@ -61,10 +71,8 @@ class ItemType
         return $this->items;
     }
 
-    public function setId(int $id): self
+    public function getOrderItems(): iterable
     {
-        $this->id = $id;
-
-        return $this;
+        return $this->orderItems;
     }
 }

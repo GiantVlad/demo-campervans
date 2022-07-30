@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ItemAvailabilityController extends AbstractController
+class ItemBookedController extends AbstractController
 {
     /**
      * @throws Exception
@@ -27,7 +27,7 @@ class ItemAvailabilityController extends AbstractController
         $dateTo = new \DateTimeImmutable('+1 day' . $dateTo);
         $interval = new \DateInterval('P1D');
         $period = new \DatePeriod($dateFrom, $interval , $dateTo);
-        $items = $itemAvailabilityRepository->getItemsOnStations($period, $stationId, $page);
+        $items = $itemAvailabilityRepository->getBookedItemsOnStations($period, $stationId, $page);
 
         return $this->json($items);
     }

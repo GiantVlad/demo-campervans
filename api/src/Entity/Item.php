@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -23,6 +25,7 @@ class Item
 
     #[ORM\Column(type: 'uuid', unique: true, nullable: false)]
     #[Assert\NotBlank]
+    #[Assert\Unique]
     public Uuid $uuid;
 
     public function getId(): ?int
