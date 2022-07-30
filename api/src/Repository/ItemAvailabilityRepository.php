@@ -26,6 +26,7 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
      */
     public function getItemsOnStations(\DatePeriod $period, int $stationId): iterable
     {
+        /** @var ArrayCollection $rows */
         $rows = new ArrayCollection([]);
 
         $conn = $this->getEntityManager()
@@ -51,9 +52,9 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
             $stmt->bindValue(4, $date);
             $stmt->bindValue(5, $stationId);
             $stmt->bindValue(6, $date);
-            $resultPerDay = $stmt->executeQuery()->fetchAllAssociative();
+            $resultsPerDay = $stmt->executeQuery()->fetchAllAssociative();
 
-            foreach ($resultPerDay as $result) {
+            foreach ($resultsPerDay as $result) {
                 $rows->add(new ItemAvailabilityDto($result));
             }
         }
@@ -81,9 +82,9 @@ class ItemAvailabilityRepository extends ServiceEntityRepository
             $date = $date->format('Y-m-d');
             $queryBuilder->setParameter('selected_date', $date);
 
-            $resultPerDay = $queryBuilder->getQuery()->getResult();
+            $resultsPerDay = $queryBuilder->getQuery()->getResult();
 
-            foreach ($resultPerDay as $result) {
+            foreach ($resultsPerDay as $result) {
                 $rows->add($result);
             }
         }

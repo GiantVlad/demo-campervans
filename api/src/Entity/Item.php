@@ -19,7 +19,7 @@ class Item
     #[ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: 'ItemType', inversedBy: 'items')]
+    #[ORM\ManyToOne(targetEntity: ItemType::class, inversedBy: 'items')]
     #[Assert\NotBlank]
     public ItemType $type;
 
@@ -27,6 +27,12 @@ class Item
     #[Assert\NotBlank]
     #[Assert\Unique]
     public Uuid $uuid;
+
+    public function __construct()
+    {
+        $this->type = new ItemType();
+        $this->uuid = Uuid::v4();
+    }
 
     public function getId(): ?int
     {

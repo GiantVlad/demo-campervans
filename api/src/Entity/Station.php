@@ -24,6 +24,11 @@ class Station
     #[Assert\Length(min: 2, max: 255)]
     public string $name;
 
+    public function __construct()
+    {
+        $this->name = '';
+    }
+
     public function getId(): ?int
     {
         return $this->id;

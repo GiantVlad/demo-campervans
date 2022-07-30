@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -31,11 +32,19 @@ class ItemType
     #[Assert\Length(min: 3, max: 255)]
     public string $alias;
 
-    #[ORM\OneToMany(mappedBy: 'item', targetEntity: 'Item')]
+    #[ORM\OneToMany(mappedBy: 'item', targetEntity: Item::class)]
     public iterable $items;
 
-    #[ORM\OneToMany(mappedBy: 'order', targetEntity: 'OrderItem')]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderItem::class)]
     public iterable $orderItems;
+
+    public function __construct()
+    {
+        $this->type = '';
+        $this->alias = '';
+        $this->items = new ArrayCollection();
+        $this->orderItems = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {

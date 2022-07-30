@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     collectionOperations: [
         'get',
+        'post',
         'get_items_on_station' => [
             'method' => 'GET',
             'path' => '/items-availability',
@@ -52,33 +53,45 @@ class OrderItem
     #[ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: 'Order', inversedBy: 'orderItems')]
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'orderItems')]
+    #[Assert\NotNull]
     private Order $order;
 
-    #[ORM\ManyToOne(targetEntity: 'Item', inversedBy: 'orderItems')]
+    #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'orderItems')]
     private ?Item $item;
 
-    #[ORM\ManyToOne(targetEntity: 'ItemType', inversedBy: 'orderItems')]
-    #[Assert\NotBlank]
+    #[ORM\ManyToOne(targetEntity: ItemType::class, inversedBy: 'orderItems')]
+    #[Assert\NotNull]
     public ItemType $itemType;
 
-    #[ORM\Column(type: 'date')]
-    #[Assert\NotBlank]
-    #[Assert\Date]
-    public \DateTimeInterface $dateFrom;
+    #[ORM\Column(type: 'datetime')]
+    #[Assert\NotNull]
+    public ?\DateTimeInterface $dateFrom;
 
-    #[ORM\Column(type: 'date')]
-    #[Assert\NotBlank]
-    #[Assert\Date]
-    public \DateTimeInterface $dateTo;
+    #[ORM\Column(type: 'datetime')]
+    #[Assert\NotNull]
+    public ?\DateTimeInterface $dateTo;
 
-    #[ORM\ManyToOne(targetEntity: 'Station')]
+    #[ORM\ManyToOne(targetEntity: Station::class)]
     #[ORM\JoinColumn(name: 'in_station_id')]
+    #[Assert\NotNull]
     public Station $inStation;
 
-    #[ORM\ManyToOne(targetEntity: 'Station')]
+    #[ORM\ManyToOne(targetEntity: Station::class)]
     #[ORM\JoinColumn(name: 'out_station_id')]
+    #[Assert\NotNull]
     public Station $outStation;
+
+    public function __construct()
+    {
+        $this->order = new Order();
+        $this->item = null;
+        $this->itemType = new ItemType();
+        $this->dateFrom = new \DateTimeImmutable();
+        $this->dateTo = new \DateTimeImmutable();
+        $this->inStation = new Station();
+        $this->outStation = new Station();
+    }
 
     public function getId(): ?int
     {
@@ -121,24 +134,24 @@ class OrderItem
         return $this;
     }
 
-    public function getDateFrom(): \DateTimeInterface
+    public function getDateFrom(): ?\DateTimeInterface
     {
         return $this->dateFrom;
     }
 
-    public function setDateFrom(\DateTimeInterface $dateFrom): self
+    public function setDateFrom(?\DateTimeInterface $dateFrom): self
     {
         $this->dateFrom = $dateFrom;
 
         return $this;
     }
 
-    public function getDateTo(): \DateTimeInterface
+    public function getDateTo(): ?\DateTimeInterface
     {
         return $this->dateTo;
     }
 
-    public function setDateTo(\DateTimeInterface $dateTo): self
+    public function setDateTo(?\DateTimeInterface $dateTo): self
     {
         $this->dateTo = $dateTo;
 
