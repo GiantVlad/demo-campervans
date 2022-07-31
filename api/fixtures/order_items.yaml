@@ -1,0 +1,85 @@
+App\Entity\OrderItem:
+    order_item_1:
+       itemType: '@item_type_1'
+       dateFrom: <(new \DateTimeImmutable('2022-06-18'))>
+       dateTo: <(new \DateTimeImmutable('2022-07-15'))>
+       outStation: '@station_1'
+       inStation: '@station_3'
+       order: '@order_1'
+    order_item_2:
+        itemType: '@item_type_1'
+        dateFrom: <(new \DateTimeImmutable('2022-07-18'))>
+        dateTo: <(new \DateTimeImmutable('2022-07-18'))>
+        outStation: '@station_3'
+        inStation: '@station_3'
+        order: '@order_2'
+    order_item_3:
+        itemType: '@item_type_1'
+        dateFrom: <(new \DateTimeImmutable('2022-06-20'))>
+        dateTo: <(new \DateTimeImmutable('2022-07-23'))>
+        outStation: '@station_4'
+        inStation: '@station_3'
+        order: '@order_3'
+    order_item_4:
+        itemType: '@item_type_1'
+        dateFrom: <(new \DateTimeImmutable('2022-07-20'))>
+        dateTo: <(new \DateTimeImmutable('2022-07-23'))>
+        outStation: '@station_4'
+        inStation: '@station_3'
+        order: '@order_4'
+    order_item_5:
+        itemType: '@item_type_1'
+        dateFrom: <(new \DateTimeImmutable('2022-07-25'))>
+        dateTo: <(new \DateTimeImmutable('2022-07-26'))>
+        outStation: '@station_3'
+        inStation: '@station_4'
+        order: '@order_4'
+    order_item_6:
+        itemType: '@item_type_1'
+        dateFrom: <(new \DateTimeImmutable('2022-07-29'))>
+        dateTo: <(new \DateTimeImmutable('2022-07-30'))>
+        outStation: '@station_2'
+        inStation: '@station_3'
+        order: '@order_5'
+    order_item_7:
+        itemType: '@item_type_1'
+        dateFrom: <(new \DateTimeImmutable('2022-07-29'))>
+        dateTo: <(new \DateTimeImmutable('2022-07-30'))>
+        outStation: '@station_4'
+        inStation: '@station_3'
+        order: '@order_5'
+    order_item_8:
+        itemType: '@item_type_2'
+        dateFrom: <(new \DateTimeImmutable('2022-07-29'))>
+        dateTo: <(new \DateTimeImmutable('2022-07-30'))>
+        outStation: '@station_4'
+        inStation: '@station_3'
+        order: '@order_5'
+    order_item_9:
+        itemType: '@item_type_2'
+        dateFrom: <(new \DateTimeImmutable('2022-07-29'))>
+        dateTo: <(new \DateTimeImmutable('2022-07-30'))>
+        outStation: '@station_4'
+        inStation: '@station_3'
+        order: '@order_5'
+    order_item_10:
+        itemType: '@item_type_1'
+        dateFrom: <(new \DateTimeImmutable('2022-07-31'))>
+        dateTo: <(new \DateTimeImmutable('2022-08-01'))>
+        outStation: '@station_3'
+        inStation: '@station_2'
+        order: '@order_6'
+    order_item_11:
+        itemType: '@item_type_2'
+        dateFrom: <(new \DateTimeImmutable('2022-07-31'))>
+        dateTo: <(new \DateTimeImmutable('2022-08-01'))>
+        outStation: '@station_3'
+        inStation: '@station_2'
+        order: '@order_6'
+    order_item_12:
+        itemType: '@item_type_2'
+        dateFrom: <(new \DateTimeImmutable('2022-07-31'))>
+        dateTo: <(new \DateTimeImmutable('2022-08-01'))>
+        outStation: '@station_3'
+        inStation: '@station_2'
+        order: '@order_6'

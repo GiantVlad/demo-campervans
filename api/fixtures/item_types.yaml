@@ -1,0 +1,16 @@
+App\Entity\ItemType:
+    item_type_1:
+        type: 'car'
+        alias: 'Car'
+    item_type_2:
+        type: 'tent'
+        alias: 'Tent'
+    item_type_3:
+        type: 'bed_sheets'
+        alias: 'Set of bed sheets'
+    item_type_4:
+        type: 'toilet'
+        alias: 'Toilets'
+    item_type_5:
+        type: 'table'
+        alias: 'Table'

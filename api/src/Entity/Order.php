@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]
 #[ORM\Entity]
@@ -19,12 +21,13 @@ class Order
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
 
-    #[ORM\OneToMany(mappedBy: 'order', targetEntity: 'OrderItem')]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderItem::class)]
     public iterable $orderItems;
 
     public function __construct()
     {
-        $this->orderItems = new ArrayCollection([]);
+        $this->createdAt = new \DateTimeImmutable();
+        $this->orderItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -39,7 +42,7 @@ class Order
 
     public function getCreatedAt(): \DateTimeInterface
     {
-        return $this->createdAt ?? new \DateTimeImmutable();
+        return $this->createdAt;
     }
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self

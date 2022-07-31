@@ -1,0 +1,16 @@
+App\Entity\Item:
+    item_{1..50}:
+        type: '@item_type_1'
+        uuid (unique): '<( Symfony\Component\Uid\Uuid::v4() )>'
+    item_{51..70}:
+        type: '@item_type_2'
+        uuid (unique): '<( Symfony\Component\Uid\Uuid::v4() )>'
+    item_{71..150}:
+        type: '@item_type_3'
+        uuid (unique): '<( Symfony\Component\Uid\Uuid::v4() )>'
+    item_{151..200}:
+        type: '@item_type_4'
+        uuid (unique): '<( Symfony\Component\Uid\Uuid::v4() )>'
+    item_{201..230}:
+        type: '@item_type_5'
+        uuid (unique): '<( Symfony\Component\Uid\Uuid::v4() )>'
